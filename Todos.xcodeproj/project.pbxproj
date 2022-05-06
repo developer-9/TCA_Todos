@@ -14,6 +14,8 @@
 		637F36EC2824B09000466CEF /* TodosTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637F36EB2824B09000466CEF /* TodosTests.swift */; };
 		637F36F62824B09000466CEF /* TodosUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637F36F52824B09000466CEF /* TodosUITests.swift */; };
 		637F36F82824B09000466CEF /* TodosUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637F36F72824B09000466CEF /* TodosUITestsLaunchTests.swift */; };
+		637F37052824B1BC00466CEF /* Todos.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637F37042824B1BC00466CEF /* Todos.swift */; };
+		637F37082824B20500466CEF /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = 637F37072824B20500466CEF /* ComposableArchitecture */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,6 +46,7 @@
 		637F36F12824B09000466CEF /* TodosUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TodosUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		637F36F52824B09000466CEF /* TodosUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodosUITests.swift; sourceTree = "<group>"; };
 		637F36F72824B09000466CEF /* TodosUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodosUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		637F37042824B1BC00466CEF /* Todos.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Todos.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,6 +54,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				637F37082824B20500466CEF /* ComposableArchitecture in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -95,6 +99,7 @@
 			isa = PBXGroup;
 			children = (
 				637F36DA2824B08E00466CEF /* TodosApp.swift */,
+				637F37042824B1BC00466CEF /* Todos.swift */,
 				637F36DC2824B08E00466CEF /* ContentView.swift */,
 				637F36DE2824B09000466CEF /* Assets.xcassets */,
 				637F36E02824B09000466CEF /* Preview Content */,
@@ -143,6 +148,9 @@
 			dependencies = (
 			);
 			name = Todos;
+			packageProductDependencies = (
+				637F37072824B20500466CEF /* ComposableArchitecture */,
+			);
 			productName = Todos;
 			productReference = 637F36D72824B08E00466CEF /* Todos.app */;
 			productType = "com.apple.product-type.application";
@@ -215,6 +223,9 @@
 				Base,
 			);
 			mainGroup = 637F36CE2824B08E00466CEF;
+			packageReferences = (
+				637F37062824B20500466CEF /* XCRemoteSwiftPackageReference "swift-composable-architecture" */,
+			);
 			productRefGroup = 637F36D82824B08E00466CEF /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -259,6 +270,7 @@
 			files = (
 				637F36DD2824B08E00466CEF /* ContentView.swift in Sources */,
 				637F36DB2824B08E00466CEF /* TodosApp.swift in Sources */,
+				637F37052824B1BC00466CEF /* Todos.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -585,6 +597,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		637F37062824B20500466CEF /* XCRemoteSwiftPackageReference "swift-composable-architecture" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "git@github.com:pointfreeco/swift-composable-architecture.git";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		637F37072824B20500466CEF /* ComposableArchitecture */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 637F37062824B20500466CEF /* XCRemoteSwiftPackageReference "swift-composable-architecture" */;
+			productName = ComposableArchitecture;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 637F36CF2824B08E00466CEF /* Project object */;
 }
