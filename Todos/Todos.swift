@@ -42,4 +42,9 @@ enum AppAction: Equatable {
     case todo(id: Todo.ID, action: TodoAction)
 }
 
+struct AppEnvironment {
+    var mainQueue: AnySchedulerOf<DispatchQueue>
+    var uuid: () -> UUID
+}
+
 
