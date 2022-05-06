@@ -7,6 +7,7 @@
 
 import Foundation
 import ComposableArchitecture
+import SwiftUI
 
 
 //MARK: - State
@@ -41,4 +42,20 @@ let todoReducer = Reducer<Todo, TodoAction, TodoEnvironment> { todo, action, _ i
     }
 }
 
-
+struct TodoView: View {
+    let store: Store<Todo, TodoAction>
+    
+    var body: some View {
+        WithViewStore(self.store) { viewStore in
+            HStack {
+                Button(action: { viewStore.send(.checkBoxToggled) }) {
+                    Image(systemName: viewStore.isComplete ? "checkmark.square" : "square")
+                }
+                .buttonStyle(.plain)
+                
+                TextField("Untitled Todo", text: viewStore.binding(get: \.description, send: TodoAction.textFieldChanged))
+            }
+            .foregroundColor(viewStore.isComplete ? .gray : nil)
+        }
+    }
+}
