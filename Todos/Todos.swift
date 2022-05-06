@@ -30,3 +30,16 @@ struct AppState: Equatable {
         }
     }
 }
+
+enum AppAction: Equatable {
+    case addTodoButtonTapped
+    case clearCompletedButtonTapped
+    case delete(IndexSet)
+    case editModeChanged(EditMode)
+    case filterPicked(Filter)
+    case move(IndexSet, Int)
+    case sortCompletedTodos
+    case todo(id: Todo.ID, action: TodoAction)
+}
+
+
