@@ -47,4 +47,63 @@ struct AppEnvironment {
     var uuid: () -> UUID
 }
 
-
+let appReducer = Reducer<AppState, AppAction, AppEnvironment>
+    .combine(
+        todoReducer.forEach(
+            state: \.todos,
+            action: /AppAction.todo(id: action:),
+            environment: { _ in TodoEnvironment() }
+        ),
+        
+        Reducer { state, action, environment in
+            switch action {
+            case .addTodoButtonTapped:
+                state.todos.insert(Todo(id: environment.uuid()), at: 0)
+                return .none
+                
+            case .clearCompletedButtonTapped:
+                state.todos.removeAll(where: \.isComplete)
+                return .none
+                
+            case .delete(let indexSet):
+                state.todos.remove(atOffsets: indexSet)
+                return .none
+                
+            case .editModeChanged(let editMode):
+                state.editMode = editMode
+                return .none
+                
+            case .filterPicked(let filter):
+                state.filter = filter
+                return .none
+                
+            case .move(var source, var destination):
+                if state.filter != .all {
+                    source = IndexSet(
+                        source
+                            .map { state.filteredTodos[$0] }
+                            .compactMap { state.todos.index(id: $0.id) }
+                    )
+                    destination = state.todos.index(id: state.filteredTodos[destination].id) ?? destination
+                }
+                state.todos.move(fromOffsets: source, toOffset: destination)
+                
+                return Effect(value: .sortCompletedTodos)
+                    .delay(for: .milliseconds(100), scheduler: environment.mainQueue)
+                    .eraseToEffect()
+                
+            case .sortCompletedTodos:
+                state.todos.sort { $1.isComplete && !$0.isComplete }
+                return .none
+                
+            case .todo(id: _, action: .checkBoxToggled):
+                enum TodoCompletionId {}
+                return Effect(value: .sortCompletedTodos)
+                    .debounce(id: TodoEnvironment.self, for: 1, scheduler: environment.mainQueue.animation())
+                
+            case .todo:
+                return .none
+            }
+        }
+    )
+    .debug()
