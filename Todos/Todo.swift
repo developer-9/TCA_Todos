@@ -23,3 +23,22 @@ enum TodoAction: Equatable {
     case checkBoxToggled
     case textFieldChanged(String)
 }
+
+// MARK: - Environment
+
+struct TodoEnvironment {}
+
+// MARK: - Reducer
+
+let todoReducer = Reducer<Todo, TodoAction, TodoEnvironment> { todo, action, _ in
+    switch action {
+    case .checkBoxToggled:
+        todo.isComplete.toggle()
+        return .none
+    case .textFieldChanged(let description):
+        todo.description = description
+        return .none
+    }
+}
+
+
