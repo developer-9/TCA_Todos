@@ -16,3 +16,10 @@ struct Todo: Equatable, Identifiable {
     let id: UUID
     var isComplete = false
 }
+
+// MARK: - Action
+
+enum TodoAction: Equatable {
+    case checkBoxToggled
+    case textFieldChanged(String)
+}
