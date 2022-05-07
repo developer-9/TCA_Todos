@@ -124,6 +124,11 @@ struct AppView: View {
     let store: Store<AppState, AppAction>
     @ObservedObject var viewStore: ViewStore<ViewState, AppAction>
     
+    init(store: Store<AppState, AppAction>) {
+      self.store = store
+      self.viewStore = ViewStore(self.store.scope(state: ViewState.init(state:)))
+    }
+    
     struct ViewState: Equatable {
         let editMode: EditMode
         let filter: Filter
@@ -180,5 +185,40 @@ struct AppView: View {
             }
         }
         .navigationViewStyle(.stack)
+    }
+}
+
+extension IdentifiedArray where ID == Todo.ID, Element == Todo {
+    static let mock: Self = [
+      Todo(
+        description: "Check Mail",
+        id: UUID(uuidString: "DEADBEEF-DEAD-BEEF-DEAD-BEEDDEADBEEF")!,
+        isComplete: false
+      ),
+      Todo(
+        description: "Buy Milk",
+        id: UUID(uuidString: "CAFEBEEF-CAFE-BEEF-CAFE-BEEFCAFEBEEF")!,
+        isComplete: false
+      ),
+      Todo(
+        description: "Call Mom",
+        id: UUID(uuidString: "D00DCAFE-D00D-CAFE-D00D-CAFED00DCAFE")!,
+        isComplete: true
+      )
+    ]
+}
+
+struct AppView_Previews: PreviewProvider {
+    static var previews: some View {
+        AppView(
+            store: Store(
+                initialState: AppState(todos: .mock),
+                reducer: appReducer,
+                environment: AppEnvironment(
+                    mainQueue: .main,
+                    uuid: UUID.init
+                )
+            )
+        )
     }
 }
