@@ -44,7 +44,9 @@ enum AppAction: Equatable {
     case editModeChanged(EditMode)
     case filterPicked(Filter)
     case move(IndexSet, Int)
+    //並び方を指定する
     case sortCompletedTodos
+    //チェックボックスをタップした時に発火する
     case todo(id: Todo.ID, action: TodoAction)
 }
 
@@ -99,7 +101,7 @@ let appReducer = Reducer<AppState, AppAction, AppEnvironment>
                 state.todos.move(fromOffsets: source, toOffset: destination)
                 
                 return Effect(value: .sortCompletedTodos)
-                    .delay(for: .milliseconds(100), scheduler: environment.mainQueue)
+                    .delay(for: .milliseconds(200), scheduler: environment.mainQueue)
                     .eraseToEffect()
                 
             case .sortCompletedTodos:
