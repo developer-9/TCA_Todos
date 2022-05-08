@@ -168,12 +168,14 @@ struct AppView: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     EditButton()
-                    
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Clear Completed") {
                         viewStore.send(.clearCompletedButtonTapped, animation: .default)
                     }
                     .disabled(viewStore.isClearCompletedButtonDisabled)
-                    
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Add Todo") {
                         viewStore.send(.addTodoButtonTapped, animation: .default)
                     }
