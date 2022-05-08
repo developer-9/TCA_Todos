@@ -18,26 +18,34 @@ class TodosTests: XCTestCase {
             initialState: AppState(),
             reducer: appReducer,
             environment: AppEnvironment(
-                mainQueue: scheduler.eraseToAnyScheduler(),
-                uuid: UUID.incrementing)
+                mainQueue: self.scheduler.eraseToAnyScheduler(),
+                uuid: UUID.incrementing
+            )
         )
         
         store.send(.addTodoButtonTapped) {
             $0.todos.insert(
-                Mock.todo, at: 0
+                Todo(
+                    description: "",
+                    id: UUID(uuidString: "00000000-0000-0000-0000-000000000000")!,
+                    isComplete: false
+                ),
+                at: 0
             )
         }
     }
     
     func testEditTodo() {
         let state = AppState(
-            todos: [Mock.todo]
+            todos: [
+                Mock.todo
+            ]
         )
         let store = TestStore(
             initialState: state,
             reducer: appReducer,
             environment: AppEnvironment(
-                mainQueue: scheduler.eraseToAnyScheduler(),
+                mainQueue: self.scheduler.eraseToAnyScheduler(),
                 uuid: UUID.incrementing
             )
         )
@@ -48,7 +56,46 @@ class TodosTests: XCTestCase {
             $0.todos[id: state.todos[0].id]?.description = .mock
         }
     }
-            
+    
+    func testCompleteTodo() {
+        let state = AppState(
+            todos: [
+                Todo(
+                    description: "",
+                    id: UUID(uuidString: "00000000-0000-0000-0000-000000000000")!,
+                    isComplete: false
+                ),
+                Todo(
+                    description: "",
+                    id: UUID(uuidString: "00000000-0000-0000-0000-000000000001")!,
+                    isComplete: false
+                ),
+            ]
+        )
+        let store = TestStore(
+            initialState: state,
+            reducer: appReducer,
+            environment: AppEnvironment(
+                mainQueue: self.scheduler.eraseToAnyScheduler(),
+                uuid: UUID.incrementing
+            )
+        )
+        
+        store.send(.todo(id: state.todos[0].id, action: .checkBoxToggled)) {
+            $0.todos[id: state.todos[0].id]?.isComplete = true
+        }
+        self.scheduler.advance(by: 1)
+        store.receive(.sortCompletedTodos) {
+            $0.todos = [
+                $0.todos[1],
+                $0.todos[0],
+            ]
+        }
+    }
+    
+    func testCompleteTodoDebounces() {
+        let state = AppState(todos: [Mock.todo, Mock.todo2])
+    }
 
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
@@ -87,12 +134,19 @@ extension UUID {
 extension String {
     static let mock = "mock"
     static let uuid = "00000000-0000-0000-0000-000000000000"
+    static let uuid2 = "00000000-0000-0000-0000-000000000001"
 }
 
 enum Mock {
     static var todo = Todo(
         description: .mock,
         id: UUID(uuidString: .uuid)!,
+        isComplete: false
+    )
+    
+    static var todo2 = Todo(
+        description: .mock,
+        id: UUID(uuidString: .uuid2)!,
         isComplete: false
     )
 }
