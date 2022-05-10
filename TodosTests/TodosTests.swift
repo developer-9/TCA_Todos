@@ -60,16 +60,8 @@ class TodosTests: XCTestCase {
     func testCompleteTodo() {
         let state = AppState(
             todos: [
-                Todo(
-                    description: "",
-                    id: UUID(uuidString: "00000000-0000-0000-0000-000000000000")!,
-                    isComplete: false
-                ),
-                Todo(
-                    description: "",
-                    id: UUID(uuidString: "00000000-0000-0000-0000-000000000001")!,
-                    isComplete: false
-                ),
+                Mock.todo,
+                Mock.todo2
             ]
         )
         let store = TestStore(
@@ -94,7 +86,35 @@ class TodosTests: XCTestCase {
     }
     
     func testCompleteTodoDebounces() {
-        let state = AppState(todos: [Mock.todo, Mock.todo2])
+        let state = AppState(
+            todos: [
+                Mock.todo, Mock.todo2
+            ]
+        )
+        let store = TestStore(
+            initialState: state,
+            reducer: appReducer,
+            environment: AppEnvironment(
+                mainQueue: scheduler.eraseToAnyScheduler(),
+                uuid: UUID.incrementing)
+        )
+        
+        store.send(.todo(id: state.todos[0].id, action: .checkBoxToggled)) {
+            $0.todos[id: state.todos[0].id]?.isComplete = true
+        }
+        
+        // 0.5秒後に実行する
+        scheduler.advance(by: 0.5)
+        store.send(.todo(id: state.todos[0].id, action: .checkBoxToggled)) {
+            $0.todos[id: state.todos[0].id]?.isComplete = false
+        }
+        
+        scheduler.advance(by: 1)
+        store.receive(.sortCompletedTodos)
+    }
+    
+    func testDelete() {
+        
     }
 
     override func setUpWithError() throws {
