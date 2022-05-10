@@ -114,9 +114,27 @@ class TodosTests: XCTestCase {
     }
     
     func testDelete() {
-        
+        let state = AppState(
+            todos: [
+                Mock.todo, Mock.todo2, Mock.todo3
+            ]
+        )
+        let store = TestStore(
+            initialState: state,
+            reducer: appReducer,
+            environment: AppEnvironment(
+                mainQueue: scheduler.eraseToAnyScheduler(),
+                uuid: UUID.incrementing
+            )
+        )
+        store.send(.delete([1])) {
+            $0.todos = [
+                $0.todos[0],
+                $0.todos[2]
+            ]
+        }
     }
-
+    
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
     }
@@ -155,6 +173,7 @@ extension String {
     static let mock = "mock"
     static let uuid = "00000000-0000-0000-0000-000000000000"
     static let uuid2 = "00000000-0000-0000-0000-000000000001"
+    static let uuid3 = "00000000-0000-0000-0000-000000000002"
 }
 
 enum Mock {
@@ -163,10 +182,14 @@ enum Mock {
         id: UUID(uuidString: .uuid)!,
         isComplete: false
     )
-    
     static var todo2 = Todo(
         description: .mock,
         id: UUID(uuidString: .uuid2)!,
+        isComplete: false
+    )
+    static var todo3 = Todo(
+        description: .mock,
+        id: UUID(uuidString: .uuid3)!,
         isComplete: false
     )
 }
